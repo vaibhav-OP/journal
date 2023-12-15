@@ -99,6 +99,29 @@ def deleteJournal():
         cursor.execute("delete from journals where createdAt = '{}'".format(currentDate))
         notifySuccess("Deleted todays journal successfully")
 
+def fetchJournalOn():
+    date = input("Please enter date (yyyy-mm-dd): ")
+
+    while True:
+        try:
+            cursor.execute("select * from journals where createdAt = '{}'".format(date))
+        except:
+            date = input("Please enter a valid date (yyyy-mm-dd): ")
+            continue
+        else:
+            break
+
+    todayJournal = cursor.fetchone()
+
+    if todayJournal == None:
+        notifyError("You have not posted a journal on {}".format(date))
+    else:
+        clearConsole()
+        print("#{}".format(todayJournal[0]), end=" ")
+        print(Fore.CYAN + "{}".format(todayJournal[1].capitalize()), end=Style.RESET_ALL + " ")
+        print("({})".format(todayJournal[3]))
+        print(todayJournal[2])
+
 commandList = [
     {
         "ID": "1",
@@ -119,6 +142,11 @@ commandList = [
         "ID": "4",
         "desc": "Delete today's journal.",
         "call": deleteJournal,
+    },
+    {
+        "ID": "5",
+        "desc": "Fetch journal created on.",
+        "call": fetchJournalOn,
     }
 
 ]
