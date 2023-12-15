@@ -1,5 +1,5 @@
 - ADD journal (once/day) ✔️
 - UPDATE journal (only todays)
 - DELETE journal (only todays)
-- VIEW journal
+- VIEW journal (todays) ✔️
 - VIEW journal list

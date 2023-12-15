@@ -44,17 +44,19 @@ def viewTodaysJournal():
         notifyError("You have not posted a journal today.")
     else:
         clearConsole()
-        print(todayJournal)
+        print(Fore.CYAN + todayJournal[1].capitalize(), end=Style.RESET_ALL + " ")
+        print("({})".format(todayJournal[3]))
+        print(todayJournal[2])
 
 commandList = [
     {
         "ID": "1",
-        "desc": "Create a journal for your day (you can only create one/day)",
+        "desc": "Create a journal for your day (you can only create one/day).",
         "call": createJournal,
     },
     {
         "ID": "2",
-        "desc": "Displays today's journal",
+        "desc": "Displays today's journal.",
         "call": viewTodaysJournal,
     }
 
@@ -81,5 +83,4 @@ def main():
                 break
         else:
             clearConsole()
-    clearConsole()
 main()
