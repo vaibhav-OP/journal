@@ -29,10 +29,15 @@ def createJournal():
         notifyError("You already have posted a journal today.")
     else:
         title = input("Enter the title for today's journal\n")
+        while len(title) == 0:
+            title = input(Fore.RED + "Enter a valid title for today's journal\n" + Style.RESET_ALL)
+
         description = input("Enter the description for today's journal\n")
+        while len(description) == 0:
+            description = input(Fore.RED + "Enter the description for today's journal" + Style.RESET_ALL)
 
         cursor.execute("insert into journals(title, description, createdAt) values('{}', '{}', '{}')".format(title, description, currentDate))
-        notifySuccess()
+        notifySuccess("Successfully added today's journal")
 
 def viewTodaysJournal():
     currentDate = date.today()
@@ -82,6 +87,18 @@ def updateJournal():
         except:
             notifyError("Something went wrong")
 
+def deleteJournal():
+    currentDate = date.today()
+
+    cursor.execute("select * from journals where createdAt = '{}'".format(currentDate))
+    todayJournal = cursor.fetchone()
+
+    if todayJournal == None:
+        notifyError("You have not posted a journal today.")
+    else:
+        cursor.execute("delete from journals where createdAt = '{}'".format(currentDate))
+        notifySuccess("Deleted todays journal successfully")
+
 commandList = [
     {
         "ID": "1",
@@ -97,6 +114,11 @@ commandList = [
         "ID": "3",
         "desc": "Update today's journal.",
         "call": updateJournal,
+    },
+    {
+        "ID": "4",
+        "desc": "Delete today's journal.",
+        "call": deleteJournal,
     }
 
 ]
@@ -113,6 +135,7 @@ def main():
 
         inputCommand = input("Enter what you want to do: ")
         if inputCommand.lower() == "x":
+            print("Closing the applicaiton...")
             break
 
         for command in commandList:
@@ -123,4 +146,6 @@ def main():
                 break
         else:
             clearConsole()
+
+clearConsole()
 main()
