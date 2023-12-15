@@ -44,9 +44,43 @@ def viewTodaysJournal():
         notifyError("You have not posted a journal today.")
     else:
         clearConsole()
-        print(Fore.CYAN + todayJournal[1].capitalize(), end=Style.RESET_ALL + " ")
+        print("#{}".format(todayJournal[0]), end=" ")
+        print(Fore.CYAN + "{}".format(todayJournal[1].capitalize()), end=Style.RESET_ALL + " ")
         print("({})".format(todayJournal[3]))
         print(todayJournal[2])
+
+def updateJournal():
+    currentDate = date.today()
+
+    cursor.execute("select * from journals where createdAt = '{}'".format(currentDate))
+    todayJournal = cursor.fetchone()
+
+    if todayJournal == None:
+        notifyError("You have not posted a journal today.")
+    else:
+        clearConsole()
+        print(Fore.CYAN + "1 -", end=Style.RESET_ALL+" ")
+        print(Fore.GREEN + "title", end=Style.RESET_ALL+"\n")
+        print(Fore.CYAN + "2 -", end=Style.RESET_ALL+" ")
+        print(Fore.GREEN + "description", end=Style.RESET_ALL+"\n")
+
+        command = input("What you want to update? ")
+
+        try:
+            if (command == "1"):
+                title = input("Enter a new title: ")
+                cursor.execute("update journals set title = '{}' where createdAt = '{}'".format(title, currentDate))
+            elif (command == "2"):
+                description = input("Enter a new description: ")
+                cursor.execute("update journals set description = '{}' where createdAt = '{}'".format(description, currentDate))
+            else:
+                raise ValueError("Invalid command")
+
+            notifySuccess("Updated the journal successfully")
+        except ValueError:
+            notifyError("Invalid option")
+        except:
+            notifyError("Something went wrong")
 
 commandList = [
     {
@@ -58,6 +92,11 @@ commandList = [
         "ID": "2",
         "desc": "Displays today's journal.",
         "call": viewTodaysJournal,
+    },
+    {
+        "ID": "3",
+        "desc": "Update today's journal.",
+        "call": updateJournal,
     }
 
 ]
@@ -79,6 +118,7 @@ def main():
         for command in commandList:
             if inputCommand == command["ID"] :
                 command["call"]()
+                mycon.commit()
                 print()
                 break
         else:
