@@ -1,0 +1,5 @@
+- ADD journal (once/day)
+- UPDATE journal
+- DELETE journal
+- VIEW journal
+- VIEW journal list
